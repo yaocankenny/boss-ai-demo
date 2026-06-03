@@ -108,32 +108,42 @@ export function CenterWorkspace({ activeQueryId, onSelectEvidence }: CenterWorks
   const reasoningSteps = submittedQuery ? demoData.subgraphPresets[submittedQuery.id].reasoningSteps : [];
 
   useEffect(() => {
-    if (chatStage !== 'reasoning' || !isAutoPlay || reasoningSteps.length === 0) return;
+    if (chatStage !== 'reasoning' || !isAutoPlay || reasoningSteps.length === 0 || step >= reasoningSteps.length) return;
 
-    const interval = setInterval(() => {
+    const activeStepTasks = reasoningSteps[step]?.tasks || [];
+    const typingTime = activeStepTasks.reduce((max, task, tIdx) => {
+      const taskTypingTime = (tIdx * 300 + 150) + (task.length * 20);
+      return Math.max(max, taskTypingTime);
+    }, 0);
+
+    // Dynamic duration: time for typewriter output to finish plus a comfortable 2-second reading/viewing buffer
+    const duration = typingTime + 2000;
+
+    const timer = setTimeout(() => {
       setStep(prev => {
         if (prev < reasoningSteps.length) {
-          if (prev + 1 === reasoningSteps.length) {
+          const nextStep = prev + 1;
+          if (nextStep === reasoningSteps.length) {
             setChatStage('complete');
           }
-          return prev + 1;
+          return nextStep;
         }
         return prev;
       });
-    }, 2000);
+    }, duration);
 
-    return () => clearInterval(interval);
-  }, [chatStage, isAutoPlay, reasoningSteps.length]);
+    return () => clearTimeout(timer);
+  }, [chatStage, isAutoPlay, step, reasoningSteps]);
 
   return (
     <div className="flex-1 h-full bg-white flex flex-col relative w-full overflow-hidden">
       {/* Header */}
       <div className="h-16 flex items-center justify-between px-6 bg-white border-b border-[#EAE5DC] shrink-0">
         <h2 className="text-lg font-semibold text-[#1A1A1A]">Conversation</h2>
-        <div className="flex items-center gap-4 text-[#A1A1AA]">
-          <button className="hover:text-[#1A1A1A] transition-colors"><Copy size={18} /></button>
-          <button className="hover:text-[#1A1A1A] transition-colors"><Bell size={18} /></button>
-          <button className="hover:text-[#1A1A1A] transition-colors"><Maximize2 size={18} /></button>
+        <div className="flex items-center gap-4 text-[#0F172A]">
+          <button className="hover:opacity-70 transition-opacity"><Copy size={18} /></button>
+          <button className="hover:opacity-70 transition-opacity"><Bell size={18} /></button>
+          <button className="hover:opacity-70 transition-opacity"><Maximize2 size={18} /></button>
         </div>
       </div>
 
@@ -187,7 +197,7 @@ export function CenterWorkspace({ activeQueryId, onSelectEvidence }: CenterWorks
                          <div className="w-full xl:w-80 bg-white border-b xl:border-b-0 xl:border-r border-[#EAE5DC] flex flex-col shrink-0">
                             <div className="p-4 border-b border-[#EAE5DC] bg-[#FAFAFA] flex items-center justify-between">
                                <div className="flex items-center gap-2">
-                                  <Bot size={18} className="text-[#CF9E68]" />
+                                  <Bot size={18} className="text-[#0F172A]" />
                                   <h3 className="text-sm font-semibold text-[#1A1A1A]">Reasoning Process</h3>
                                </div>
                                <div className="flex items-center gap-3">
@@ -197,12 +207,12 @@ export function CenterWorkspace({ activeQueryId, onSelectEvidence }: CenterWorks
                                        setChatStage('reasoning');
                                        setReportTextDone(false);
                                      }} 
-                                     className="text-[#A1A1AA] hover:text-[#1A1A1A] transition-colors" 
+                                     className="text-[#0F172A] hover:opacity-75 transition-opacity" 
                                      title="Restart Reasoning"
                                    >
                                      <RotateCcw size={14} />
                                    </button>
-                                   <button onClick={() => setIsAutoPlay(!isAutoPlay)} className={`transition-colors flex items-center ${isAutoPlay ? "text-[#47A36B]" : "text-[#D4D4D8]"}`} title="Auto-Play">
+                                   <button onClick={() => setIsAutoPlay(!isAutoPlay)} className={`transition-colors flex items-center ${isAutoPlay ? "text-[#0F172A]" : "text-gray-300"}`} title="Auto-Play">
                                      <ToggleRight size={20} />
                                    </button>
                                </div>
@@ -221,7 +231,7 @@ export function CenterWorkspace({ activeQueryId, onSelectEvidence }: CenterWorks
                                      <div key={idx} className={`relative pl-8 transition-all duration-500 ${isFuture ? 'opacity-40 grayscale' : 'opacity-100'}`}>
                                         {/* Timeline Dot */}
                                         <div className="absolute left-[-2px] top-0 w-6 h-6 rounded-full bg-white flex items-center justify-center">
-                                          <div className={`w-2.5 h-2.5 rounded-full transition-colors duration-500 ${isCurrent ? 'bg-[#CF9E68] shadow-[0_0_10px_rgba(207,158,104,0.6)] animate-pulse' : isPast ? 'bg-[#47A36B]' : 'bg-[#D4D4D8]'}`}></div>
+                                          <div className={`w-2.5 h-2.5 rounded-full transition-colors duration-500 ${isCurrent ? 'bg-[#0F172A] shadow-[0_0_10px_rgba(15,23,42,0.6)] animate-pulse' : isPast ? 'bg-[#0F172A]' : 'bg-[#D4D4D8]'}`}></div>
                                         </div>
                                         
                                         <div className="flex flex-col gap-1.5 -mt-0.5">
@@ -233,7 +243,7 @@ export function CenterWorkspace({ activeQueryId, onSelectEvidence }: CenterWorks
                                             <ul className="space-y-2 mt-1">
                                               {stepInfo.tasks.map((task, tIdx) => (
                                                 <li key={tIdx} className={`text-[11px] leading-relaxed flex items-start gap-2 transition-all duration-300 animate-in fade-in slide-in-from-left-1 ${isPast ? 'text-[#71717A]' : 'text-[#3F3F46]'}`} style={{ animationDelay: `${tIdx * 150}ms`, animationFillMode: 'both' }}>
-                                                  <CheckCircle2 size={13} className={`shrink-0 mt-[1px] ${isPast ? 'text-[#47A36B]' : 'text-[#CF9E68]'}`} />
+                                                  <CheckCircle2 size={13} className="shrink-0 mt-[1px] text-[#0F172A]" />
                                                   <span className="flex-1 pt-[0.5px]">
                                                     <TypewriterText text={task} delay={tIdx * 300 + 150} streaming={isCurrent} />
                                                   </span>
@@ -250,7 +260,7 @@ export function CenterWorkspace({ activeQueryId, onSelectEvidence }: CenterWorks
                          </div>
                        ) : (
                          <div className="hidden xl:flex w-80 bg-[#FAFAFA] border-r border-[#EAE5DC] flex-col items-center justify-center text-[#A1A1AA] p-8 text-center shrink-0">
-                           <div className="w-8 h-8 border-[3px] border-[#EAE5DC] border-t-[#CF9E68] rounded-full animate-spin mb-4"></div>
+                           <div className="w-8 h-8 border-[3px] border-[#EAE5DC] border-t-[#0F172A] rounded-full animate-spin mb-4"></div>
                            <p className="text-sm font-medium">Preparing to map reasoning steps...</p>
                          </div>
                        )}
@@ -291,7 +301,7 @@ export function CenterWorkspace({ activeQueryId, onSelectEvidence }: CenterWorks
           </>
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-center opacity-50 pb-20">
-             <Bot size={48} className="text-[#B8B8B8] mb-4" />
+             <Bot size={48} className="text-[#0F172A] mb-4" />
              <h2 className="text-xl font-medium text-[#1A1A1A]">Welcome to Boss AI</h2>
              <p className="text-sm text-[#71717A] mt-2">Type your questions or concerns about your business below to begin.</p>
           </div>

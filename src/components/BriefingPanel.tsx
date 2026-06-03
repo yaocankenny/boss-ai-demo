@@ -106,7 +106,7 @@ export function BriefingPanel({
         {/* Content Area */}
         {!activeQueryId || !activeItem ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-gray-400 space-y-3">
-            <FileText size={36} className="opacity-40 text-gray-400" />
+            <FileText size={36} className="opacity-35 text-[#0F172A]" />
             <p className="text-sm">Click any evidence card in the analyzer report to inspect trace details.</p>
           </div>
         ) : (
@@ -134,7 +134,7 @@ export function BriefingPanel({
                           : 'border-[#EAE5DC] bg-white text-[#71717A] hover:bg-gray-100'
                       }`}
                     >
-                      <div className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#B48242] animate-pulse' : 'bg-gray-300'}`}></div>
+                      <div className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#0F172A] animate-pulse' : 'bg-gray-300'}`}></div>
                       <span>Evidence {idx + 1}</span>
                     </button>
                   );
@@ -151,8 +151,8 @@ export function BriefingPanel({
                   <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#0F172A]/10 text-[#0F172A] text-[10px] font-bold uppercase tracking-wider">
                     Source: {activeItem.source}
                   </span>
-                  <div className="flex items-center gap-1.5 text-[10px] text-[#47A36B] font-bold">
-                    <ShieldCheck size={14} />
+                  <div className="flex items-center gap-1.5 text-[10px] text-[#0F172A] font-bold">
+                    <ShieldCheck size={14} className="text-[#0F172A]" />
                     High Coherence Rate
                   </div>
                 </div>

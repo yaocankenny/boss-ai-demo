@@ -4,13 +4,13 @@ export const demoData: DemoData = {
   queries: [
     {
       id: 'q1',
-      suggestedText: "What were the top three urgent issues concluded from the last VP-level meeting? Any one that's slacking and delaying without my knowledge?",
-      text: "What were the top three urgent issues concluded from the last VP-level meeting? Any one that's slacking and delaying without my knowledge?"
+      suggestedText: "Based on last week’s executive meetings, what are the top three critical items currently off my radar that I need to review?",
+      text: "Based on last week’s executive meetings, what are the top three critical items currently off my radar that I need to review?"
     },
     {
       id: 'q2',
-      suggestedText: "We are about to finalize Q2 earnings report. Is our Q2 ARR target on track? Are there any hidden risks that require my immediate attention?",
-      text: "We are about to finalize Q2 earnings report. Is our Q2 ARR target on track? Are there any hidden risks that require my immediate attention?"
+      suggestedText: "We are about to finalize Q2 earnings report. Is Business Unit A Q2 ARR target on track? Are there any hidden risks that require my immediate attention?",
+      text: "We are about to finalize Q2 earnings report. Is Business Unit A Q2 ARR target on track? Are there any hidden risks that require my immediate attention?"
     },
     {
       id: 'q3',
@@ -19,31 +19,83 @@ export const demoData: DemoData = {
     }
   ],
   ontologyObjects: [
-    { id: 'Meeting', label: 'Meeting', category: 'Execution', x: 550, y: 100 },
-    { id: 'Issue', label: 'Issue', category: 'Execution', x: 550, y: 400 },
-    { id: 'Owner', label: 'Owner', category: 'Execution', x: 1050, y: 250 },
-    { id: 'Commitment', label: 'Commitment', category: 'Execution', x: 1000, y: 550 },
-    { id: 'ActionItem', label: 'Action Item', category: 'Execution', x: 100, y: 250 },
-    { id: 'Progress', label: 'Progress', category: 'Execution', x: 550, y: 700 },
-    { id: 'ComputedJudgment', label: 'Computed Judgment', category: 'Strategic', x: 200, y: 900 },
-    
+    { id: 'Meeting', label: 'Meeting', category: 'Execution', x: 150, y: 120 },
+    { id: 'Issue', label: 'Issue', category: 'Execution', x: 550, y: 220 },
+    { id: 'Product', label: 'Product', category: 'Business', x: 250, y: 380 },
+    { id: 'DeliveryCustomer', label: 'Delivery Customer', category: 'Business', x: 800, y: 150 },
+    { id: 'Payment', label: 'Payment', category: 'Business', x: 380, y: 550 },
+    { id: 'BusinessLine', label: 'Business Line', category: 'Business', x: 950, y: 400 },
+    { id: 'Commitment', label: 'Commitment', category: 'Execution', x: 620, y: 480 },
+
+    // Related inactive ones for Query 1
+    { id: 'Transcript', label: 'Meeting Transcript', category: 'Evidence', x: 100, y: 240 },
+    { id: 'Attendees', label: 'Attendees', category: 'Organization', x: 320, y: 80 },
+    { id: 'Owner', label: 'Owner', category: 'Execution', x: 700, y: 280 },
+    { id: 'Risk', label: 'Risk', category: 'Strategic', x: 450, y: 100 },
+    { id: 'Feature', label: 'Product Feature', category: 'Business', x: 180, y: 490 },
+    { id: 'SLA', label: 'SLA Alignment', category: 'Business', x: 980, y: 100 },
+    { id: 'Contract', label: 'Contract Agreement', category: 'Business', x: 850, y: 280 },
+    { id: 'Invoice', label: 'Invoice Tracker', category: 'Business', x: 220, y: 620 },
+    { id: 'Market', label: 'Market Segment', category: 'Business', x: 1050, y: 520 },
+    { id: 'ActionItem', label: 'Action Item', category: 'Execution', x: 740, y: 580 },
+    { id: 'Evidence', label: 'Evidence Logs', category: 'Evidence', x: 500, y: 400 },
+
+    // Keep nodes needed for Q2/Q3 compatibility
     { id: 'Revenue', label: 'Revenue', category: 'Business', x: 500, y: 350 },
-    { id: 'Contract', label: 'Contract', category: 'Business', x: 800, y: 200 },
-    { id: 'Payment', label: 'Payment', category: 'Business', x: 900, y: 500 },
     { id: 'Project', label: 'Project', category: 'Business', x: 600, y: 650 },
-    { id: 'Risk', label: 'Risk', category: 'Strategic', x: 250, y: 400 },
     { id: 'ManagementView', label: 'Management View', category: 'Organization', x: 100, y: 200 },
     { id: 'Judgment', label: 'Judgment', category: 'Strategic', x: 200, y: 650 },
-
     { id: 'BusinessUnit', label: 'Business Unit', category: 'Business', x: 500, y: 300 },
     { id: 'Customer', label: 'Customer', category: 'Business', x: 800, y: 150 },
     { id: 'Organization', label: 'Organization', category: 'Organization', x: 200, y: 200 },
-    { id: 'Product', label: 'Product', category: 'Business', x: 900, y: 450 },
-    { id: 'GrowthJudgment', label: 'Growth Judgment', category: 'Strategic', x: 600, y: 600 },
-
-    { id: 'Evidence', label: 'Evidence', category: 'Evidence', x: 1000, y: 800 }
+    { id: 'GrowthJudgment', label: 'Growth Judgment', category: 'Strategic', x: 600, y: 600 }
   ],
   relationships: [
+    // Query 1 active edges for the reasoning propagation
+    { id: 'q1_e1', source: 'Meeting', target: 'Issue', label: 'raises' },
+    { id: 'q1_e2', source: 'Issue', target: 'Product', label: 'affects' },
+    { id: 'q1_e3', source: 'Product', target: 'DeliveryCustomer', label: 'delivered_to' },
+    { id: 'q1_e4', source: 'DeliveryCustomer', target: 'Payment', label: 'bills' },
+    { id: 'q1_e5', source: 'Payment', target: 'BusinessLine', label: 'funds' },
+    { id: 'q1_e6', source: 'BusinessLine', target: 'Commitment', label: 'defines' },
+
+    // Related inactive edges for Query 1
+    { id: 'q1_ei1', source: 'Meeting', target: 'Transcript', label: 'recorded_in' },
+    { id: 'q1_ei2', source: 'Meeting', target: 'Attendees', label: 'attended_by' },
+    { id: 'q1_ei3', source: 'Issue', target: 'Owner', label: 'assigned_to' },
+    { id: 'q1_ei4', source: 'Issue', target: 'Risk', label: 'induces' },
+    { id: 'q1_ei5', source: 'Product', target: 'Feature', label: 'includes' },
+    { id: 'q1_ei6', source: 'DeliveryCustomer', target: 'Contract', label: 'subject_to' },
+    { id: 'q1_ei7', source: 'DeliveryCustomer', target: 'SLA', label: 'restricted_by' },
+    { id: 'q1_ei8', source: 'Payment', target: 'Invoice', label: 'billed_via' },
+    { id: 'q1_ei9', source: 'BusinessLine', target: 'Market', label: 'targets' },
+    { id: 'q1_ei10', source: 'Commitment', target: 'ActionItem', label: 'requires' },
+    { id: 'q1_ei11', source: 'Commitment', target: 'Evidence', label: 'attested_by' },
+
+    { id: 'q1_ei12', source: 'Transcript', target: 'Issue', label: 'mentions' },
+    { id: 'q1_ei13', source: 'Transcript', target: 'Evidence', label: 'analyzed_by' },
+    { id: 'q1_ei14', source: 'Attendees', target: 'Owner', label: 'managed_by' },
+    { id: 'q1_ei15', source: 'Attendees', target: 'Commitment', label: 'makes' },
+    { id: 'q1_ei16', source: 'Owner', target: 'Commitment', label: 'handles' },
+    { id: 'q1_ei17', source: 'Owner', target: 'BusinessLine', label: 'reports_to' },
+    { id: 'q1_ei18', source: 'Risk', target: 'BusinessLine', label: 'threatens' },
+    { id: 'q1_ei19', source: 'Risk', target: 'Evidence', label: 'documented_in' },
+    { id: 'q1_ei20', source: 'Feature', target: 'SLA', label: 'blocks' },
+    { id: 'q1_ei21', source: 'Feature', target: 'DeliveryCustomer', label: 'required_for' },
+    { id: 'q1_ei22', source: 'Contract', target: 'Payment', label: 'governs' },
+    { id: 'q1_ei23', source: 'Contract', target: 'SLA', label: 'aligned_with' },
+    { id: 'q1_ei24', source: 'SLA', target: 'Payment', label: 'impacts' },
+    { id: 'q1_ei25', source: 'SLA', target: 'Evidence', label: 'evaluated_in' },
+    { id: 'q1_ei26', source: 'Invoice', target: 'DeliveryCustomer', label: 'sent_to' },
+    { id: 'q1_ei27', source: 'Invoice', target: 'BusinessLine', label: 'holds_up' },
+    { id: 'q1_ei28', source: 'Market', target: 'DeliveryCustomer', label: 'consists_of' },
+    { id: 'q1_ei29', source: 'Market', target: 'Feature', label: 'values' },
+    { id: 'q1_ei30', source: 'ActionItem', target: 'Owner', label: 'tracked_by' },
+    { id: 'q1_ei31', source: 'ActionItem', target: 'Issue', label: 'resolves' },
+    { id: 'q1_ei32', source: 'Evidence', target: 'Issue', label: 'backs' },
+    { id: 'q1_ei33', source: 'Evidence', target: 'Payment', label: 'impacts' },
+
+    // Standard edges for other queries (q2 / q3)
     { id: 'e1', source: 'Meeting', target: 'Issue', label: 'raises' },
     { id: 'e2', source: 'Issue', target: 'Commitment', label: 'creates' },
     { id: 'e3', source: 'Issue', target: 'ActionItem', label: 'requires' },
@@ -53,7 +105,6 @@ export const demoData: DemoData = {
     { id: 'e7', source: 'ActionItem', target: 'Progress', label: 'has_status' },
     { id: 'e8', source: 'Progress', target: 'ComputedJudgment', label: 'supports' },
     { id: 'e9', source: 'Commitment', target: 'Evidence', label: 'evidenced_by' },
-
     { id: 'e10', source: 'Revenue', target: 'Commitment', label: 'committed_by' },
     { id: 'e11', source: 'Revenue', target: 'Contract', label: 'supported_by' },
     { id: 'e12', source: 'Revenue', target: 'Payment', label: 'supported_by' },
@@ -62,7 +113,6 @@ export const demoData: DemoData = {
     { id: 'e15', source: 'Risk', target: 'ManagementView', label: 'surfaced_in' },
     { id: 'e16', source: 'Risk', target: 'Judgment', label: 'supports' },
     { id: 'e17', source: 'Risk', target: 'Evidence', label: 'supports' },
-
     { id: 'e18', source: 'BusinessUnit', target: 'Revenue', label: 'generates' },
     { id: 'e19', source: 'BusinessUnit', target: 'Customer', label: 'serves' },
     { id: 'e20', source: 'BusinessUnit', target: 'Organization', label: 'consumes' },
@@ -72,14 +122,25 @@ export const demoData: DemoData = {
   ],
   subgraphPresets: {
     q1: {
-      nodes: ['Meeting', 'Issue', 'ActionItem', 'Commitment', 'Progress', 'Owner', 'Evidence', 'ComputedJudgment'],
-      edges: ['e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'e9'],
+      nodes: [
+        'Meeting', 'Issue', 'Product', 'DeliveryCustomer', 'Payment', 'BusinessLine', 'Commitment',
+        'Transcript', 'Attendees', 'Owner', 'Risk', 'Feature', 'SLA', 'Contract', 'Invoice', 'Market', 'ActionItem', 'Evidence'
+      ],
+      edges: [
+        'q1_e1', 'q1_e2', 'q1_e3', 'q1_e4', 'q1_e5', 'q1_e6',
+        'q1_ei1', 'q1_ei2', 'q1_ei3', 'q1_ei4', 'q1_ei5', 'q1_ei6', 'q1_ei7', 'q1_ei8', 'q1_ei9', 'q1_ei10', 'q1_ei11',
+        'q1_ei12', 'q1_ei13', 'q1_ei14', 'q1_ei15', 'q1_ei16', 'q1_ei17', 'q1_ei18', 'q1_ei19', 'q1_ei20', 'q1_ei21',
+        'q1_ei22', 'q1_ei23', 'q1_ei24', 'q1_ei25', 'q1_ei26', 'q1_ei27', 'q1_ei28', 'q1_ei29', 'q1_ei30', 'q1_ei31',
+        'q1_ei32', 'q1_ei33'
+      ],
       reasoningSteps: [
-        { nodeId: 'Meeting', name: 'Meeting', tasks: ['Locate the last Chief of Staff Meeting.'] },
-        { nodeId: 'Issue', name: 'Issues', tasks: ['Extract the three highest-priority issues raised by the CEO.'] },
-        { nodeId: 'Commitment', name: 'Commitments', tasks: ['Identify related action items and commitments.'] },
-        { nodeId: 'Progress', name: 'Progress', tasks: ['Compare commitments with actual progress after the meeting.'] },
-        { nodeId: 'ComputedJudgment', name: 'Judgments', tasks: ['Compute: Commitment Decay, Intent Drift, Hidden Resistance, Escalation Need.'] }
+        { nodeId: 'Meeting', name: 'Meetings CEO missed', tasks: ['Identify key executive committee meetings that occurred without leadership representation in the past week.'] },
+        { nodeId: 'Issue', name: 'Issues discussed', tasks: ['Locate major product, technical, and commercial issues discussed during those sessions.'] },
+        { nodeId: 'Product', name: 'Product affected', tasks: ['Map core product release timelines affected or delayed due to unresolved issues.'] },
+        { nodeId: 'DeliveryCustomer', name: 'Delivery customer affected', tasks: ['Determine which strategic client delivery milestones got delayed by product release slips.'] },
+        { nodeId: 'Payment', name: 'Payment exposed', tasks: ['Calculate immediate payment milestones blockages and accounts receivable cash flow risks.'] },
+        { nodeId: 'BusinessLine', name: 'Business line impacted', tasks: ['Evaluate ARR impacts and strategic development health for corresponding product/business lines.'] },
+        { nodeId: 'Commitment', name: 'Top 3 issues CEO should know', tasks: ['Synthesize top 3 off-radar items and formulate executive action plan commitments.'] }
       ]
     },
     q2: {
@@ -107,48 +168,46 @@ export const demoData: DemoData = {
   },
   results: {
     q1: {
-      title: 'Commitment Accountability Report',
-      judgment: 'Execution decay detected across core meeting commitments.',
-      judgmentSubtitle: 'The three issues have not been ignored, but they are showing signs of execution decay.',
+      title: 'Executive Blindspot & Delivery Exposure Report',
+      judgment: 'Executive alignment decay detected: Missed meetings have cascaded into delivery and payment risk.',
+      judgmentSubtitle: '6 missed executive meetings led to delayed product releases, directly exposing $1.2M in near-term payment pipelines for key accounts.',
       metrics: [
-        { label: 'Risk Level', value: 'High', color: 'text-red-500' },
-        { label: 'Impact', value: 'Medium', color: 'text-amber-500' },
-        { label: 'CEO Attention', value: 'High', color: 'text-red-500' },
-        { label: 'Trend', value: 'Worsening', color: 'text-red-500' }
+        { label: 'Risk Level', value: 'High', color: 'text-[#0F172A]' },
+        { label: 'Cash Exposed', value: '$1.2M', color: 'text-red-600' },
+        { label: 'CEO Attention', value: 'Critical', color: 'text-red-600' },
+        { label: 'Trend', value: 'Worsening', color: 'text-red-600' }
       ],
       markdown: `
-Boss AI identified that the CEO raised three priority issues in the last Chief of Staff Meeting:
+Boss AI mapped last week’s executive meeting records against product delivery pipelines and identified three critical items currently completely off your radar:
 
-| Issue | Current Status | AI Judgment |
+### Top 3 Critical Blindspots Exposed
+
+| Blindspot / Critical Item | Propagation Path Impact | AI Core Judgment & Commitment Status |
 | :--- | :--- | :--- |
-| **Improve key customer renewal-risk management** | Partially progressing | The issue was recorded and discussed, but has not yet become a complete operating mechanism. |
-| **Shorten cross-functional decision cycles** | Behind expectations | Several decisions remain in coordination without a single accountable owner. |
-| **Make meeting commitments accountable** | Drifted | Meeting notes were generated, but several commitments lack owner, deadline, or evidence of completion. |
+| **1. Apex Enterprises Delivery Slip** | Product v2.1 delay → Delivery milestone missed | **Critical Risk**: Delayed release of core platform features has directly slipped the customer's User Acceptance Test. No owner assigned. |
+| **2. $1.2M Cash Collection Milestone at Risk** | Customer milestone missed → Payment collection stall | **Financial Exposure**: Q2 accounts receivable milestone under threat; finance is unable to issue the structured invoice. |
+| **3. Business Unit A Subscription ARR Growth Stall** | Payment exposed → Business Line ARR impacted | **Strategic Block**: Business Unit A ARR growth shows a 14% growth decay compared to initial Q2 targets due to unresolved blocker. |
 
-**Overall AI Judgment**
+---
 
-The three issues have not been ignored, but they are showing signs of **execution decay**.
+### Recommended CEO Intervention Path
 
-The problem is not that nothing happened. The problem is that CEO-level issues were converted into fragmented departmental actions, and some commitments were recorded without becoming accountable execution.
-
-**Recommended CEO Action**
-
-1. **Review these three issues first** in the next Chief of Staff Meeting.
-2. **Assign a single accountable owner** for each issue.
-3. Put all related commitments into **14-day “Say-to-Do” tracking**.
-4. **Automatically escalate** ownerless, overdue, or evidence-missing commitments.
+1. **Conduct an Immediate Intervention on Apex Enterprises**: Force a cross-departmental alignment meeting between Product Engineering and Customer Success by tomorrow noon.
+2. **Assign Single Accountable Owners**: Assign VP of Engineering as sole owner of v2.1 release, and VP of CS as owner of Apex satisfaction.
+3. **Lock Payment Release Conditions**: Push Apex Executives for a partial milestone payment based on intermediate module completion.
+4. **Establish SAY-TO-DO Meeting Tracking**: Ensure all corporate executive meetings are automatically transcribed and traced with 14-day accountability monitoring.
 `,
       recommendedActions: [
-        'Review these three issues first in the next Chief of Staff Meeting.',
-        'Assign a single accountable owner for each issue.',
-        'Put all related commitments into 14-day “Say-to-Do” tracking.',
-        'Automatically escalate ownerless, overdue, or evidence-missing commitments.'
+        'Initiate immediate cross-departmental intervention on Apex Enterprises delivery blockers.',
+        'Assign single accountable owners for the v2.1 product release and client milestones.',
+        'Authorize discussions with Apex stakeholders regarding partial milestone collection.',
+        'Establish automated SAY-TO-DO tracing for all future executive committee meetings.'
       ]
     },
     q2: {
-      title: 'Hidden Risks Integrity Report',
-      judgment: 'One revenue item has high reporting risk and should not be counted as high-confidence ARR yet.',
-      judgmentSubtitle: 'Underlying contract archive, payment confirmation, and project acceptance remain unresolved.',
+      title: 'Business Unit A Q2 ARR Integrity Report',
+      judgment: 'High-confidence Q2 ARR target at risk due to $1.2M Apex Enterprises collection blockage.',
+      judgmentSubtitle: 'The standard forecast counts the Apex revenue as "on track", but underlying delivery slips on the v2.1 platform have frozen payment generation.',
       metrics: [
         { label: 'Risk Level', value: 'High', color: 'text-red-500' },
         { label: 'Impact', value: 'High', color: 'text-red-500' },
@@ -156,39 +215,37 @@ The problem is not that nothing happened. The problem is that CEO-level issues w
         { label: 'Trend', value: 'Critical', color: 'text-red-500' }
       ],
       markdown: `
-Q2 ARR is currently close to target based on the forecast, but Boss AI detected one revenue item that should not be treated as high-confidence ARR yet.
+Boss AI analyzed Business Unit A’s Q2 ARR forecast against operational delivery states and identified a critical, hidden reporting risk linked directly to the executive blindspot uncovered in your meetings:
 
-**A Project Revenue** has been committed to be counted in Q2 ARR.
+### The Exposed $1.2M ARR Risk
 
-However, the underlying business objects do not fully support this commitment:
-- The related contract **has not been archived**.
-- Payment **has not been confirmed**.
-- The project acceptance status is **still pending**.
-- The project owner **has not submitted a final recognition-readiness update**.
-- The item is still shown as **“on track”** in the management view.
+**Apex Enterprises Subscription Revenue ($1.2M)** has been fully committed to be counted in Business Unit A's Q2 ARR. However, the operational delivery layer does not support this:
+- The **v2.1 Cloud Release delay (18 days slip)** has caused Apex to postpone the User Acceptance Test (UAT) sign-off.
+- The contract clauses require **verified UAT Acceptance** before invoice payment can be unlocked.
+- Consequently, the **$1.2M payment remains blocked** in the finance system, with high risk of slipping past the Q2 reporting deadline.
 
-**AI Judgment**
+---
 
-This is not a normal sales follow-up. It is a **hidden Q2 reporting risk**.
+### BU-A Hidden Financial Risks Analysis
 
-If the contract archive, payment confirmation, or project acceptance cannot be completed before the Q2 report is finalized, this revenue item may need to be adjusted from the Q2 ARR forecast, and the quarterly report narrative may need to be revised.
+| Risk Object / Commitment | Operational Block | Current Status & Financial Exposure |
+| :--- | :--- | :--- |
+| **Apex Q2 Subscription ARR ($1.2M)** | Product v2.1 delay → Delivery milestone slip | **High Risk**: Still marked as "on track" in corporate management forecasts, but realistically blocked without immediate intervention. |
+| **Business Unit A ARR Expansion** | Apex collection stall | **14% Q2 Target Deficit**: Failure to recognize this $1.2M ARR in Q2 will slip Business Unit A's quarterly growth expansion targets of 14%. |
 
-**Recommended CEO Action**
+---
 
-1. **Require a clear conclusion by 18:00 today**: Can A Project Revenue still be counted in Q2 ARR?
-2. If not, what is the **ARR impact**?
-3. Force action to **archive the contract** before the reporting deadline.
-4. Push to **confirm payment approval** before quarter close.
-5. Command the **project acceptance issue** to be closed this week.
-6. Verify if this requires **CEO / CFO-level customer communication**.
+### Recommended CEO Intervention Path
+
+1. **Require an executive reconciliation by 18:00 today**: Verify if Apex Enterprises Subscription Revenue of $1.2M can still be legally or operationally accrued for Q2.
+2. **Execute the Apex Intervention**: Drive the cross-departmental alignment to unblock the v2.1 Cloud Release (Apex's core blocker).
+3. **Initiate CEO/CFO-level stakeholder outreach**: Reach out directly to Apex's CFO to negotiate partial/conditional acceptance and lock in the Q2 ARR recognition.
 `,
       recommendedActions: [
-        'Require a clear conclusion by 18:00 today: Can A Project Revenue still be counted in Q2 ARR?',
-        'Determine the exact ARR impact of removing this item.',
-        'Confirm if the contract can be archived before the reporting deadline.',
-        'Assess whether payment approval can be secured before quarter close.',
-        'Force close the project acceptance issue this week.',
-        'Initiate CEO / CFO-level customer communication if required.'
+        'Require an executive reconciliation by 18:00 today: Can Apex Subscription Revenue still be counted in Q2 ARR?',
+        'Coordinate with VP of Engineering to accelerate the v2.1 Cloud Release to unblock Apex delivery.',
+        'Negotiate partial/conditional acceptance with Apex CFO to unlock payment sign-off.',
+        'Adjust the Q2 ARR forecast for Business Unit A if the delivery slip cannot be resolved this week.'
       ]
     },
     q3: {
@@ -254,112 +311,110 @@ Growth should not be measured only by current revenue size. The company should c
   evidence: {
     q1: [
       {
-        title: "Evidence 1 | The three issues were CEO-level priorities, not ordinary meeting notes",
+        title: "Evidence 1 | 6 executive meetings missed by leadership",
         source: "Transcript",
         facts: [
-          "In the meeting, the CEO repeatedly emphasized three issues:",
-          "1. Renewal risk should not be treated as a Customer Success-only issue. Sales, Product, Delivery, and CS all need to be accountable.",
-          "2. Cross-functional decisions should not stay in repeated coordination. Critical issues need one decision owner and a clear conclusion.",
-          "3. Meeting commitments must not disappear after the meeting. Every commitment needs an owner, deadline, and evidence of completion."
+          "Leadership was absent from 6 weekly executive syncs due to overlapping strategic travel.",
+          "Engineering, Product, and Sales team updates occurred in isolation without CEO/VP oversight.",
+          "Core dependencies and blockages on platform v2.1 Cloud Release were labeled 'for info only' instead of 'escalated'."
         ],
-        whyItMatters: "These were not general discussion topics. They were CEO-level operating priorities with expected outcomes. Therefore, Boss AI should judge them by whether they entered execution, not by whether they appeared in the meeting notes."
+        whyItMatters: "Missed alignment created a communication blindspot where cross-departmental blockers were treated as low-priority operational updates rather than launch showstoppers."
       },
       {
-        title: "Evidence 2 | Several commitments were recorded, but not made accountable",
-        source: "Commitment Tracker",
+        title: "Evidence 2 | Engineering blockers and unresolved team issues",
+        source: "Issue Logs",
         facts: [
-          "After the meeting: 12 commitments were recorded.",
-          "5 commitments did not have clear deadlines.",
-          "3 commitments are already overdue.",
-          "2 commitments have no post-meeting updates.",
-          "Several items used vague language such as “jointly follow up,” “coordinate across teams,” or “continue discussion.”"
+          "14 cross-team issues were noted in transcripts regarding core API compatibility.",
+          "No primary coordinator was assigned for product-to-delivery handoff issues.",
+          "Unresolved engineering blockers went un-escalated for more than 11 consecutive working days."
         ],
-        whyItMatters: "This supports the conclusion that some issues were recorded but not truly acted on. A commitment is not executable unless it has a clear owner, due date, expected output, and completion evidence."
+        whyItMatters: "These unresolved issues directly choked the product release schedule. Unmanaged issues accumulated without a single decision maker to enforce resolution."
       },
       {
-        title: "Evidence 3 | Renewal-risk management is moving, but only partially",
+        title: "Evidence 3 | Product v2.1 Cloud Release slipped by 3 weeks",
+        source: "Product Tracker",
+        facts: [
+          "Cloud Storage & Security patching deliverables for v2.1 slipped behind target by 18 days.",
+          "System documentation for deploying the enterprise-grade API remains incomplete.",
+          "Production-ready deployment status has reverted to 'In QA' with no reliable release date."
+        ],
+        whyItMatters: "Product release delays directly caused downstream delivery teams to miss pre-committed deployment schedules with strategic customer partners."
+      },
+      {
+        title: "Evidence 4 | Delivery milestone missed for Apex Enterprises",
         source: "Customer Success",
         facts: [
-          "For the renewal-risk issue, Sales submitted a Top Customer list.",
-          "Customer Success has not completed renewal-risk classification.",
-          "Some key accounts show declining usage or reduced engagement.",
-          "Expansion paths are only defined for part of the key accounts.",
-          "Renewal risk has not yet been integrated into the CEO operating view."
+          "Apex Enterprises' production launch was strictly dependent on v2.1 release on May 28.",
+          "Milestone completion sign-off has been officially postponed due to missing platform features.",
+          "Apex representative expressed formal concerns regarding missing SLA commitments."
         ],
-        whyItMatters: "This supports the conclusion that renewal-risk management is partially progressing but has not yet become a company-level operating mechanism. The expected outcome was an operating system that connects customer health, renewal risk, expansion path, owner, and next action."
+        whyItMatters: "Apex Enterprises is our top enterprise client. Slipped product timelines caused a direct breach of delivery commitments, creating high customer churn risk."
       },
       {
-        title: "Evidence 4 | Cross-functional decisions are still being diluted by coordination",
-        source: "Project Logs",
+        title: "Evidence 5 | $1.2M payment milestone blocked by delivery failure",
+        source: "Finance System",
         facts: [
-          "For the cross-functional decision-cycle issue: Two critical decisions appeared in three consecutive meetings.",
-          "Meeting notes repeatedly used phrases like “pending further coordination” and “to be confirmed.”",
-          "No single decision owner was assigned.",
-          "Product, Delivery, and Finance each provided partial inputs, but no final decision was recorded."
+          "An invoice of $1,200,000 was scheduled to be billed upon Apex milestone sign-off.",
+          "Finance department has locked invoice generation pending verified Customer Acceptance certificate.",
+          "Q2 cash collection projections have been reduced by $1.2M due to invoicing block."
         ],
-        whyItMatters: "This supports the conclusion that the issue is behind expectations. The CEO’s original intent was to shorten decision cycles and force closure. The current execution still shows coordination without ownership."
+        whyItMatters: "The delivery block directly translates into immediate financial risk, jeopardizing working capital and causing an executive tracking gap."
       },
       {
-        title: "Evidence 5 | Commitment accountability has drifted from the CEO’s original intent",
-        source: "Follow-up Tracker",
+        title: "Evidence 6 | Business Unit A ARR growth shows 14% performance decay",
+        source: "Business Tracker",
         facts: [
-          "For commitment accountability, meeting notes were generated successfully.",
-          "But several commitments lack owner or deadline.",
-          "Some action items show “in progress” without concrete output.",
-          "The next Chief of Staff Meeting agenda does not currently prioritize reviewing the three CEO-raised issues first.",
-          "Some follow-ups are framed as departmental updates rather than CEO-level commitment closure."
+          "Business Unit A subscription ARR growth target for Q2 has dropped off-track.",
+          "The billing block on Apex accounts for 14% of the quarterly subscription ARR target expansion.",
+          "No mitigation campaign is active for corresponding business line performance."
         ],
-        whyItMatters: "This supports the conclusion that the issue has drifted from the CEO’s original intent. The CEO did not ask for better meeting notes. The CEO asked for commitments to become traceable, accountable, and closed-loop."
+        whyItMatters: "A single unmanaged meeting blindspot has successfully propagated from operational friction up to the company's highest strategic level."
       }
     ],
     q2: [
       {
-        title: "Evidence 1 | This revenue item has already been committed into Q2 ARR",
+        title: "Evidence 1 | Apex Subscription Revenue has been fully committed into BU-A Q2 ARR",
         source: "Revenue Commitment",
         facts: [
-          "A Project Revenue has been included in the current Q2 ARR forecast.",
-          "The committed amount is X.",
-          "The commitment source is the Q2 Forecast Review with High Confidence.",
-          "The commitment status is active in management operating reports.",
-          "The management report still shows this item as “on track.”"
+          "Apex Enterprises Subscription Revenue ($1.2M) has been included in the current Q2 active forecast for Business Unit A.",
+          "The forecasting team marked this deal as High Confidence during the Q2 Review.",
+          "The revenue status is currently classified as 'Active Booking' within internal tracking systems.",
+          "The corporate forecast presentation still shows this account as 'on track' to count towards the quarterly report."
         ],
-        whyItMatters: "This evidence shows that A Project Revenue is already being treated as a reliable Q2 ARR component in the management forecast. If underlying contract, payment, or project conditions are not ready, it directly impacts Q2 ARR targets."
+        whyItMatters: "This evidence shows that Apex Enterprises is already being handled as a done deal in BU-A's ARR targets. If underlying delivery conditions slip, it directly creates an unexpected quarterly performance gap."
       },
       {
-        title: "Evidence 2 | The contract does not yet support high-confidence recognition",
+        title: "Evidence 2 | The Apex Contract Amendment is still awaiting formal finalization",
         source: "Contract Archive",
         facts: [
-          "A Project’s related contract has been signed.",
-          "But the contract archive status is marked as 'not archived'.",
-          "Finance review of the recognition terms is still pending.",
-          "Key recognition clauses have not been fully confirmed.",
-          "No final contract archive confirmation is available."
+          "Apex's expansion service agreement has been drafted and initialed.",
+          "But the formal contract archive status is marked as 'partially archived' due to pending annexes.",
+          "Legal and Compliance teams have noted that the activation date is contingent on absolute milestone verification.",
+          "No final executed, fully-auditable contract file has been uploaded into the ERP system."
         ],
-        whyItMatters: "This evidence shows a gap between the Q2 revenue commitment and contract readiness. The revenue has been committed into Q2, but the contract object is not complete enough to support high-confidence recognition. This creates a Commitment-Contract Gap."
+        whyItMatters: "This shows a gap between active ARR forecasting and back-office verification. We cannot legally recognize $1.2M with a contract that remains conditionally incomplete."
       },
       {
-        title: "Evidence 3 | Payment has not been confirmed",
+        title: "Evidence 3 | The $1.2M Payment has been frozen by automated Finance locks",
         source: "Finance System",
         facts: [
-          "Payment status remains pending.",
-          "Customer payment approval has not been confirmed.",
-          "Expected payment date is not locked.",
-          "The blocker is listed as waiting for the customer’s internal approval.",
-          "Invoice status is not fully cleared for collection."
+          "The invoice generation code prevents billing without a certified UAT Acceptance Document.",
+          "The billing cycle for Apex expansion is set to expire by quarter-end.",
+          "Finance operations has flagged this transaction as 'At Risk' because the UAT is contingent on the delayed v2.1 Cloud Release.",
+          "Expected collection dates have been pushed past the formal financial close unless an executive override is issued."
         ],
-        whyItMatters: "This evidence shows that the payment condition does not yet support treating this revenue as secure Q2 ARR. The commitment says this item can be counted in Q2, but the payment object says collection is still uncertain. This creates a Commitment-Payment Gap."
+        whyItMatters: "This highlights the immediate threat to BU-A's quarterly cash projections. The forecast assumes secure ARR, but payment and cash delivery remain frozen because of product delivery failure."
       },
       {
-        title: "Evidence 4 | The risk has not been fully surfaced in the management view",
+        title: "Evidence 4 | Delivery risk remains hidden from the standard BU-A management reports",
         source: "Risk Log",
         facts: [
-          "The revenue item is still shown as “on track” in general views.",
-          "The risk note only says “continuous follow-up.”",
-          "Contract archive status, payment uncertainty, and project acceptance risk are not highlighted together in the CEO view.",
-          "The item has not been escalated as a high-risk Q2 reporting item.",
-          "The Q2 forecast has not yet reflected a downside scenario for this revenue item."
+          "The standard Business Unit A dashboard reports Apex Enterprises status as 'Healthy'.",
+          "There is no cross-referencing between the product engineering delay log and the finance billing schedule.",
+          "The operational risk log lists the issue simply as 'ongoing customer coordination' rather than an ARR showstopper.",
+          "Corporate planners have not run a downside/alternative simulation of missing this $1.2M target."
         ],
-        whyItMatters: "This evidence shows that the underlying risk exists, but it has not been fully surfaced to the CEO-level operating view. The real issue is that the risk is still hidden behind a high-confidence forecast."
+        whyItMatters: "This evidence shows that the core risk is siloed between departmental databases. The CEO was not alerted because engineering and finance systems do not automatically flag cross-boundary blockages."
       }
     ],
     q3: [

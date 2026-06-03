@@ -17,7 +17,7 @@ export function Sidebar({ activeQueryId, onSelectQuery }: SidebarProps) {
           <div className="relative">
             {/* Simple logo approximation */}
             <div className="w-8 h-8 flex items-center justify-center">
-               <Bot size={28} className="text-[#CF9E68]" />
+               <Bot size={28} className="text-[#0F172A]" />
             </div>
           </div>
           <div>
@@ -52,7 +52,7 @@ export function Sidebar({ activeQueryId, onSelectQuery }: SidebarProps) {
             }`}
           >
             <span className="text-xs line-clamp-2 leading-relaxed">
-               What were the top three urgent issues concluded from the last VP-level meeting?
+               Based on last week’s executive meetings, what are the top three critical items currently off my radar that I need to review?
             </span>
             <span className={`text-[10px] text-right w-full ${activeQueryId === 'q1' || !activeQueryId ? 'text-zinc-600' : 'text-zinc-400'}`}>10:32 AM</span>
           </button>
@@ -66,7 +66,7 @@ export function Sidebar({ activeQueryId, onSelectQuery }: SidebarProps) {
             }`}
           >
             <span className="text-xs line-clamp-2 leading-relaxed">
-               Is our Q2 ARR target on track? Hidden risks?
+               Is Business Unit A Q2 ARR target on track? Hidden risks?
             </span>
              <span className={`text-[10px] text-right w-full ${activeQueryId === 'q2' ? 'text-zinc-600' : 'text-zinc-400'}`}>Yesterday</span>
           </button>

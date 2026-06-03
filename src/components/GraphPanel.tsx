@@ -268,10 +268,16 @@ export function GraphPanel({ activeQueryId, step, isReasoningActive = true }: Gr
     }
   };
 
-  // Keep fit function up to date for references in ResizeObservers
-  const fitRef = useRef(fitGraphView);
+  const onResizeRef = useRef<() => void>(() => {});
   useEffect(() => {
-    fitRef.current = fitGraphView;
+    onResizeRef.current = () => {
+      const activeNodeId = seqList[step];
+      if (activeQueryId && activeNodeId && step < seqList.length) {
+        zoomToNode(activeNodeId, false);
+      } else {
+        fitGraphView(false);
+      }
+    };
   });
 
   useEffect(() => {
@@ -288,7 +294,7 @@ export function GraphPanel({ activeQueryId, step, isReasoningActive = true }: Gr
 
     // Set up ResizeObserver to handle layout scale changes without jittery transitions
     const resizeObserver = new ResizeObserver(() => {
-      fitRef.current(false);
+      onResizeRef.current();
     });
     resizeObserver.observe(containerRef.current);
 

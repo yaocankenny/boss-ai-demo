@@ -95,17 +95,17 @@ export function StreamedResultReport({ result, evidence, onSelectEvidence }: Str
 
       {/* Primary Executive Judgment Area */}
       <div className="space-y-4">
-        <div className="p-4 bg-[#FEF2F2] border border-[#FEE2E2] rounded-xl relative overflow-hidden">
-          <div className="absolute right-0 top-0 text-[80px] font-bold text-[#EF4444]/5 select-none pointer-events-none font-mono leading-none">
+        <div className="p-4 bg-[#FAF8F5] border border-[#EAE5DC] rounded-xl relative overflow-hidden">
+          <div className="absolute right-0 top-0 text-[80px] font-bold text-[#0F172A]/5 select-none pointer-events-none font-mono leading-none">
             JUDGMENT
           </div>
           <div className="flex items-start gap-3">
-            <AlertCircle size={20} className="text-[#EF4444] mt-0.5 shrink-0" />
+            <AlertCircle size={20} className="text-[#0F172A] mt-0.5 shrink-0" />
             <div className="space-y-1 z-10 font-sans">
               <h4 className="text-[#1A1A1A] font-bold text-sm leading-snug">
                 {displayedJudgment}
                 {isJudgmentStreaming && (
-                  <span className="animate-pulse ml-0.5 text-[#EF4444] font-bold font-mono">|</span>
+                  <span className="animate-pulse ml-0.5 text-[#0F172A] font-bold font-mono">|</span>
                 )}
               </h4>
               {stage >= 1 && result.judgmentSubtitle && (
@@ -132,8 +132,8 @@ export function StreamedResultReport({ result, evidence, onSelectEvidence }: Str
                 <span className="text-[10px] text-[#A1A1AA] font-bold uppercase tracking-wider mb-1 truncate">{m.label}</span>
                 <div className={`text-xs font-bold ${m.color} flex items-center gap-1.5`}>
                   <span>{m.value}</span>
-                  {isWorsening && <TrendingDown size={14} className="shrink-0" />}
-                  {isImproving && !isWorsening && (m.label === 'Trend' || m.label === 'Strategy') && <TrendingUp size={14} className="shrink-0" />}
+                  {isWorsening && <TrendingDown size={14} className="text-[#0F172A] shrink-0" />}
+                  {isImproving && !isWorsening && (m.label === 'Trend' || m.label === 'Strategy') && <TrendingUp size={14} className="text-[#0F172A] shrink-0" />}
                 </div>
               </div>
             );
